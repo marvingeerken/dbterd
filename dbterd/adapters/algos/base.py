@@ -168,14 +168,15 @@ def get_table_from_metadata(model_metadata, exposures=[], **kwargs) -> Table:
     )
 
     # columns
-    for column in model_metadata.get("node", {}).get("catalog", {}).get("columns", []):
-        table.columns.append(
-            Column(
-                name=column.get("name", "").lower(),
-                data_type=column.get("type", "").lower(),
-                description=column.get("description", ""),
+    if model_metadata.get("node", {}).get("catalog", {}) is not None:
+        for column in model_metadata.get("node", {}).get("catalog", {}).get("columns", []):
+            table.columns.append(
+                Column(
+                    name=column.get("name", "").lower(),
+                    data_type=column.get("type", "").lower(),
+                    description=column.get("description", ""),
+                )
             )
-        )
 
     if not table.columns:
         table.columns.append(Column())
